@@ -1,9 +1,13 @@
 import type { Comment } from "@/types";
 
+const today = new Date()
+const fiveDaysAgo = new Date(new Date().setDate(new Date().getDate() - 5))
+
+
 export const initialComments: Comment[] = [
   {
     id: 1,
-    created_at: new Date(),
+    created_at: today,
     postId: 1,
     author: "Mickey",
     email: 'example@mail.com',
@@ -13,7 +17,7 @@ export const initialComments: Comment[] = [
   },
   {
     id: 2,
-    created_at: new Date(),
+    created_at: today,
     postId: 1,
     author: "Alice",
     email: 'example@mail.com',
@@ -23,12 +27,12 @@ export const initialComments: Comment[] = [
   },
   {
     id: 3,
-    created_at: new Date(),
+    created_at: fiveDaysAgo,
     postId: 1,
     author: "Bob",
     email: 'example@mail.com',
     userpic: 'https://avatar.iran.liara.run/public',
-    body: "Первый!",
+    body: "Первый! 🤠",
     rating: 25,
   }
 ]

@@ -1,5 +1,5 @@
 import type { Comment } from '@/types'
-import type { ChangeEvent, FormEvent, KeyboardEvent } from 'react'
+import type { ChangeEvent, FormEvent } from 'react'
 import { memo, useCallback, useRef, useState } from "react"
 import styled from "styled-components"
 
@@ -48,17 +48,6 @@ const Textarea = styled.textarea`
   box-sizing: border-box;
 `
 
-const Tip = styled.span`
-  font-size: 12px;
-  color: #aaa;
-  font-weight: 600;
-  text-align: right;
-  display: none;
-  @media(min-width: 768px) {
-    display: block;
-  }
-`
-
 const INITIAL_STATE = { name: '', email: '', body: '' }
 
 function CreateCommentForm({ onSubmit }:Props) {
@@ -100,12 +89,6 @@ function CreateCommentForm({ onSubmit }:Props) {
     setState({ ...state, [e.target.name]: e.target.value })
   }
 
-  const handleKeyPress = (e: KeyboardEvent<HTMLTextAreaElement>) => {
-    if (e.key === 'Enter' && e.shiftKey) {         
-      handleSubmit()
-    }
-  }
-
   return (
     <Wrapper action="" method="" onSubmit={handleSubmit}>
       <FieldSet>
@@ -131,7 +114,6 @@ function CreateCommentForm({ onSubmit }:Props) {
         ref={textAreaRef}
         placeholder="Оставьте комментарий..."
         onChange={handleFieldChange}
-        onKeyUp={handleKeyPress}
         value={state.body}
         name="body"
         required
@@ -140,8 +122,6 @@ function CreateCommentForm({ onSubmit }:Props) {
       <button type='submit' disabled={isPending}>
         {isPending ? '...' : 'Оставить комментарий'}
       </button>
-      
-      <Tip>SHIFT + ENTER для отправки</Tip>
     </Wrapper>
   )
 }

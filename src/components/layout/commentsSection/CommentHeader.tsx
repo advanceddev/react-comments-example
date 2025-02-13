@@ -1,4 +1,7 @@
+import { useMemo } from "react";
 import styled from "styled-components";
+import { formatDistance } from 'date-fns'
+import { ru } from "date-fns/locale";
 
 type Props = {
   author: string;
@@ -24,10 +27,17 @@ const CreatedDateTime = styled.span`
 `
 
 export default function CommentHeaderInfo({ author, date }: Props) {
+
+
+  const formatedDate = useMemo(() => {
+    return formatDistance(date, new Date(), { addSuffix: true, locale: ru })
+  }, [date])
+
+
   return (
     <CommentHeader>
       <AuthorName>{author}</AuthorName>
-      <CreatedDateTime>{date.toLocaleDateString()}</CreatedDateTime>
+      <CreatedDateTime>{formatedDate}</CreatedDateTime>
     </CommentHeader>
   )
 };
