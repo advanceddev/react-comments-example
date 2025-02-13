@@ -1,5 +1,5 @@
 import type { Comment } from '@/types'
-import type { ChangeEvent, KeyboardEvent } from 'react'
+import type { ChangeEvent, FormEvent, KeyboardEvent } from 'react'
 import { memo, useCallback, useRef, useState } from "react"
 import styled from "styled-components"
 
@@ -7,10 +7,26 @@ type Props = {
   onSubmit: (payload: Comment) => Promise<void>
 }
 
-const Wrapper = styled.div`
+const Wrapper = styled.form`
   display: flex;
   flex-direction: column;
   gap: 1em;
+`
+
+const FieldSet = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(49%, 1fr));
+  gap: 1em;
+`
+
+const InputField = styled.input`
+  border: none;
+  background: #eee5;
+  padding: 1em;
+  border-radius: 1em;
+  font-size: 1em;
+  font-weight: 500;
+  outline: none;
 `
 
 const Textarea = styled.textarea`
@@ -43,14 +59,22 @@ const Tip = styled.span`
   }
 `
 
+const INITIAL_STATE = { name: '', email: '', body: '' }
+
 function CreateCommentForm({ onSubmit }:Props) {
 
   const textAreaRef = useRef<HTMLTextAreaElement>(null)
   const [isPending, setIsPending] = useState(false)
-  const [value, setValue] = useState('')
 
-  const handleSubmit = useCallback(() => {
-    if (value.length === 0 || isPending) return
+  const [state, setState] = useState(INITIAL_STATE)
+
+  const resetForm = useCallback(() => {
+    setState(INITIAL_STATE)
+  }, [])
+
+  const handleSubmit = useCallback((e?: FormEvent<HTMLFormElement>) => {
+    e?.preventDefault()
+    if (isPending) return
     setIsPending(true)
     textAreaRef.current?.blur()
 
@@ -58,21 +82,22 @@ function CreateCommentForm({ onSubmit }:Props) {
       id: Math.random(),
       created_at: new Date(),
       postId: 1,
-      author: 'John Doe',
+      author: state.name.trim(),
+      email: state.email.trim(),
       userpic: 'https://avatar.iran.liara.run/public',
-      body: value.trim(),
+      body: state.body.trim(),
       rating: 0
     }
 
     onSubmit(payload).then(() => {
-      setValue('')
+      resetForm()
     }).finally(() => {
       setIsPending(false)
     })
-  }, [isPending, onSubmit, value])
+  }, [state.body, state.name, state.email, isPending, onSubmit, resetForm])
 
-  const handleInputChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
-    setValue(e.target.value)
+  const handleFieldChange = (e: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
+    setState({ ...state, [e.target.name]: e.target.value })
   }
 
   const handleKeyPress = (e: KeyboardEvent<HTMLTextAreaElement>) => {
@@ -82,17 +107,40 @@ function CreateCommentForm({ onSubmit }:Props) {
   }
 
   return (
-    <Wrapper>
+    <Wrapper action="" method="" onSubmit={handleSubmit}>
+      <FieldSet>
+        <InputField
+          value={state.name}
+          onChange={handleFieldChange}
+          type="text"
+          name="name"
+          placeholder='Введите имя'
+          required
+        />
+        <InputField
+          value={state.email}
+          onChange={handleFieldChange}
+          type="email"
+          name="email"
+          placeholder='Введите E-mail'
+          required
+        />
+      </FieldSet>
+
       <Textarea
         ref={textAreaRef}
         placeholder="Оставьте комментарий..."
-        onChange={handleInputChange}
+        onChange={handleFieldChange}
         onKeyUp={handleKeyPress}
-        value={value}
+        value={state.body}
+        name="body"
+        required
       />
-      <button onClick={handleSubmit} disabled={value.length === 0 || isPending}>
+
+      <button type='submit' disabled={isPending}>
         {isPending ? '...' : 'Оставить комментарий'}
       </button>
+      
       <Tip>SHIFT + ENTER для отправки</Tip>
     </Wrapper>
   )
