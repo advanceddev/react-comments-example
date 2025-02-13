@@ -1,10 +1,12 @@
 import type { Comment } from "@/types"
 import styled from "styled-components"
-import CommentsItem from "./CommentsItem"
 import CreateCommentForm from "./CreateCommentForm"
 import { wait } from "@/libs/wait"
-import { useState } from "react"
+import { lazy, Suspense, useState } from "react"
 import { initialComments } from "@/mock"
+import CommentSkeleton from "./CommentSkeleton"
+
+const CommentsItem = lazy(() => import('./CommentsItem'))
 
 const Wrapper = styled.div`
   display: flex;
@@ -42,7 +44,9 @@ export default function CommentsSection() {
         Комментарии
       </SectionTitle>
       <CreateCommentForm onSubmit={handleLeaveComment}/>
-      {items}
+      <Suspense fallback={<CommentSkeleton />}>
+        {items}
+      </Suspense>
     </Wrapper>
   )
 }
