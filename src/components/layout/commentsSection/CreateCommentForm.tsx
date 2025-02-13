@@ -1,4 +1,4 @@
-import { Comment } from '@/types'
+import type { Comment } from '@/types'
 import type { ChangeEvent, KeyboardEvent } from 'react'
 import { memo, useCallback, useRef, useState } from "react"
 import styled from "styled-components"
@@ -46,10 +46,12 @@ const Tip = styled.span`
 function CreateCommentForm({ onSubmit }:Props) {
 
   const textAreaRef = useRef<HTMLTextAreaElement>(null)
+  const [isPending, setIsPending] = useState(false)
   const [value, setValue] = useState('')
 
   const handleSubmit = useCallback(() => {
-    if (value.length === 0) return
+    if (value.length === 0 || isPending) return
+    setIsPending(true)
     textAreaRef.current?.blur()
 
     const payload = {
@@ -64,8 +66,10 @@ function CreateCommentForm({ onSubmit }:Props) {
 
     onSubmit(payload).then(() => {
       setValue('')
+    }).finally(() => {
+      setIsPending(false)
     })
-  }, [onSubmit, value])
+  }, [isPending, onSubmit, value])
 
   const handleInputChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
     setValue(e.target.value)
@@ -86,8 +90,8 @@ function CreateCommentForm({ onSubmit }:Props) {
         onKeyUp={handleKeyPress}
         value={value}
       />
-      <button onClick={handleSubmit} disabled={value.length === 0}>
-        Оставить комментарий
+      <button onClick={handleSubmit} disabled={value.length === 0 || isPending}>
+        {isPending ? '...' : 'Оставить комментарий'}
       </button>
       <Tip>SHIFT + ENTER для отправки</Tip>
     </Wrapper>

@@ -1,8 +1,8 @@
+import type { Comment } from "@/types"
 import styled from "styled-components"
 import CommentsItem from "./CommentsItem"
 import CreateCommentForm from "./CreateCommentForm"
 import { wait } from "@/libs/wait"
-import { Comment } from "@/types"
 import { useState } from "react"
 import { initialComments } from "@/mock"
 

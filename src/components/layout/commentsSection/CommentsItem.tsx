@@ -1,6 +1,8 @@
-import { Comment } from "@/types"
-import { memo, useCallback, useState } from "react"
+import type { Comment } from "@/types"
+import { memo, useEffect, useState } from "react"
 import styled from "styled-components"
+import RatingControls from "./RatingControls"
+import CommentHeaderInfo from "./CommentHeader"
 
 type Props = {
   data: Comment
@@ -25,12 +27,7 @@ const CommentWrapper = styled.div`
   flex-direction: column;
   gap: .75em;
   justify-content: center;
-`
-
-const CommentHeader= styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: .25em;
+  overflow: hidden;
 `
 
 const CommentBody = styled.span`
@@ -38,84 +35,79 @@ const CommentBody = styled.span`
   font-weight: 500;
   color: #333;
   white-space: break-spaces;
+  overflow: hidden;
+  text-overflow: ellipsis;
 `
 
-const AuthorName = styled.span`
-  font-size: 1em;
-  font-weight: 700;
-  color: #333;
-`
-
-const CreatedDateTime = styled.span`
-  font-size: .85em;
-  font-weight: 500;
-  color: #777;
-`
-
-const CommentRatingSection = styled.div`
+const CommentFooter = styled.div<{ $folded?: boolean }>`
   display: flex;
   flex-direction: row;
-  align-items: center;
-  justify-content: flex-end;
-  gap: 15px;
+  justify-content: ${p => p.$folded ? 'space-between' : 'flex-end'};
 `
 
-const CurrentRating = styled.span`
-  font-weight: 800;
-  font-size: 1em;
-`
-
-const Button = styled.button`
-  font-weight: 800;
-  font-size: 1.5em;
-  padding: .25em;
+const UnfoldButton = styled.button`
   background: transparent;
-  border: none;
+  padding: 0;
   outline: none;
-  &:hover {
-    opacity: 0.5;
-  }
-`
-
-const IncrementButton = styled(Button)`
-  color: green;
-`
-
-const DecrementButton = styled(Button)`
-  color: red;
+  border-bottom: 2px dashed #ccc;
+  line-height: 1.5;
+  height: max-content;
+  border-radius: 0;
+  color: #777;
 `
 
 function CommentsItem({ data }: Props) {
 
-  const [rating, setRating] = useState(data.rating)
+  const [state, setState] = useState({
+    rating: data.rating,
+    folded: data.rating < -10,
+    fullView: data.rating >= -10
+  });
 
-  const handleIncrementRating = useCallback(() => {
-    setRating((prev) => prev + 1)
-  }, [])
+  useEffect(() => {
+  if (state.rating < -10) {
+    setState(prev => ({ ...prev, folded: true }));
+  } else {
+    setState(prev => ({ ...prev, folded: false, fullView: true }));
+  }
+}, [state.rating]);
 
-  const handleDecrementRating = useCallback(() => {
-    setRating((prev) => prev -1)
-  }, [])
+  const updateRating = (change: number) => {
+    setState(prev => ({ ...prev, rating: prev.rating + change }));
+  };
+
+  const handleIncrementRating = () => updateRating(1);
+  const handleDecrementRating = () => updateRating(-1);
 
   return (
     <Wrapper>
-      <Userpic src={data.userpic} alt="" width={48} height={48} />
+      <Userpic src={data.userpic} alt={data.author} width={48} height={48} />
       <CommentWrapper>
-        <CommentHeader>
-          <AuthorName>{data.author}</AuthorName>
-          <CreatedDateTime>{data.created_at.toDateString()}</CreatedDateTime>
-        </CommentHeader>
-        <CommentBody>
-          {data.body}
-        </CommentBody>
-        <CommentRatingSection>
-          <CurrentRating>{rating}</CurrentRating>
-          <IncrementButton onClick={handleIncrementRating}>+</IncrementButton>
-          <DecrementButton onClick={handleDecrementRating}>-</DecrementButton>
-        </CommentRatingSection>
+        <CommentHeaderInfo author={data.author} date={data.created_at} />
+        
+        {state.fullView && (
+          <CommentBody>
+            {data.body}
+          </CommentBody>
+        )}
+        
+        <CommentFooter $folded={state.folded}>
+          {state.folded && (
+            <UnfoldButton onClick={() => setState(prev => ({ ...prev, fullView: !prev.fullView }))}>
+              {state.fullView ? 'Скрыть комментарий' : 'Развернуть комментарий'}
+            </UnfoldButton>
+          )}
+
+          <RatingControls 
+            rating={state.rating} 
+            onIncrement={handleIncrementRating} 
+            onDecrement={handleDecrementRating} 
+          />
+
+        </CommentFooter>
       </CommentWrapper>
     </Wrapper>
-  )
+  );
 }
 
 export default memo(CommentsItem)
