@@ -51,7 +51,7 @@ const CommentRatingSection = styled.div`
   flex-direction: row;
   align-items: center;
   justify-content: flex-end;
-  gap: 8px;
+  gap: 15px;
 `
 
 const CurrentRating = styled.span`
@@ -62,7 +62,7 @@ const CurrentRating = styled.span`
 const Button = styled.button`
   font-weight: 800;
   font-size: 1.5em;
-  padding: .5em;
+  padding: .25em;
   background: transparent;
   border: none;
   outline: none;

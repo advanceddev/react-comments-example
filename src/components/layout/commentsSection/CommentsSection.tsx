@@ -1,5 +1,7 @@
 import styled from "styled-components"
 import CommentsItem from "./CommentsItem"
+import CreateCommentForm from "./CreateCommentForm"
+import { wait } from "../../../libs/wait"
 
 const Wrapper = styled.div`
   display: flex;
@@ -16,11 +18,18 @@ const SectionTitle = styled.h4`
 `
 
 export default function CommentsSection() {
+
+  const handleLeaveComment = async (payload: string) => {
+    await wait(1000)
+    console.log(payload)
+  }
+
   return (
     <Wrapper>
       <SectionTitle>
         Комментарии
       </SectionTitle>
+      <CreateCommentForm onSubmit={handleLeaveComment}/>
       <CommentsItem />
       <CommentsItem />
       <CommentsItem />
