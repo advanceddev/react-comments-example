@@ -78,7 +78,7 @@ function CreateCommentForm({ onSubmit }:Props) {
       rating: 0
     }
 
-    onSubmit(payload).then(() => {
+    void onSubmit(payload).then(() => {
       resetForm()
     }).finally(() => {
       setIsPending(false)

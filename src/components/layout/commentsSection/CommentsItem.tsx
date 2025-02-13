@@ -76,8 +76,13 @@ function CommentsItem({ data }: Props) {
     setState(prev => ({ ...prev, rating: prev.rating + change }));
   };
 
-  const handleIncrementRating = () => updateRating(1);
-  const handleDecrementRating = () => updateRating(-1);
+  const handleIncrementRating = () => {
+    updateRating(1)
+  }
+
+  const handleDecrementRating = () => {
+    updateRating(-1)
+  }
 
   return (
     <Wrapper>
@@ -93,7 +98,9 @@ function CommentsItem({ data }: Props) {
         
         <CommentFooter $folded={state.folded}>
           {state.folded && (
-            <UnfoldButton onClick={() => setState(prev => ({ ...prev, fullView: !prev.fullView }))}>
+            <UnfoldButton onClick={() => {
+              setState(prev => ({ ...prev, fullView: !prev.fullView }))
+            }}>
               {state.fullView ? 'Скрыть комментарий' : 'Развернуть комментарий'}
             </UnfoldButton>
           )}
