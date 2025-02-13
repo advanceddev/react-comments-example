@@ -1,8 +1,10 @@
-import { type ChangeEvent, type KeyboardEvent, memo, useCallback, useRef, useState } from "react"
+import { Comment } from '@/types'
+import type { ChangeEvent, KeyboardEvent } from 'react'
+import { memo, useCallback, useRef, useState } from "react"
 import styled from "styled-components"
 
 type Props = {
-  onSubmit: (comment: string) => Promise<void>
+  onSubmit: (payload: Comment) => Promise<void>
 }
 
 const Wrapper = styled.div`
@@ -49,7 +51,18 @@ function CreateCommentForm({ onSubmit }:Props) {
   const handleSubmit = useCallback(() => {
     if (value.length === 0) return
     textAreaRef.current?.blur()
-    onSubmit(value.trim()).then(() => {
+
+    const payload = {
+      id: Math.random(),
+      created_at: new Date(),
+      postId: 1,
+      author: 'John Doe',
+      userpic: 'https://avatar.iran.liara.run/public',
+      body: value.trim(),
+      rating: 0
+    }
+
+    onSubmit(payload).then(() => {
       setValue('')
     })
   }, [onSubmit, value])

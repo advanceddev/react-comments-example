@@ -1,5 +1,10 @@
+import { Comment } from "@/types"
 import { memo, useCallback, useState } from "react"
 import styled from "styled-components"
+
+type Props = {
+  data: Comment
+}
 
 const Wrapper = styled.div`
   position: relative;
@@ -12,7 +17,7 @@ const Userpic = styled.img`
   width: 48px;
   height: 48px;
   border-radius: 64px;
-  border: 1px solid #aaae;
+  border: 1px solid #ccce;
 `
 
 const CommentWrapper = styled.div`
@@ -32,6 +37,7 @@ const CommentBody = styled.span`
   font-size: 1em;
   font-weight: 500;
   color: #333;
+  white-space: break-spaces;
 `
 
 const AuthorName = styled.span`
@@ -79,9 +85,9 @@ const DecrementButton = styled(Button)`
   color: red;
 `
 
-function CommentsItem() {
+function CommentsItem({ data }: Props) {
 
-  const [rating, setRating] = useState(0)
+  const [rating, setRating] = useState(data.rating)
 
   const handleIncrementRating = useCallback(() => {
     setRating((prev) => prev + 1)
@@ -93,27 +99,14 @@ function CommentsItem() {
 
   return (
     <Wrapper>
-      <Userpic src="./vite.svg" alt="" width={48} height={48} />
+      <Userpic src={data.userpic} alt="" width={48} height={48} />
       <CommentWrapper>
         <CommentHeader>
-          <AuthorName>John Doe</AuthorName>
-          <CreatedDateTime>Вчера</CreatedDateTime>
+          <AuthorName>{data.author}</AuthorName>
+          <CreatedDateTime>{data.created_at.toDateString()}</CreatedDateTime>
         </CommentHeader>
-        
-        
         <CommentBody>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quod.
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quod.
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quod.
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quod.
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quod.
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quod.
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quod.
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quod.
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quod.
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quod.
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quod.
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quod.
+          {data.body}
         </CommentBody>
         <CommentRatingSection>
           <CurrentRating>{rating}</CurrentRating>

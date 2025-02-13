@@ -1,7 +1,7 @@
 import { lazy } from 'react'
-import Container from './components/layout/container'
+import Container from '@/components/layout/container'
 
-const CommentsSection = lazy(() => import('./components/layout/commentsSection'))
+const CommentsSection = lazy(() => import('@/components/layout/commentsSection'))
 
 function App() {
 
