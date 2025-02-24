@@ -12,6 +12,9 @@ const CommentRatingSection = styled.div`
   align-items: center;
   justify-content: flex-end;
   gap: 15px;
+  background: #eee2;
+  padding: 4px 18px;
+  border-radius: 24px;
 `
 
 const CurrentRating = styled.span`

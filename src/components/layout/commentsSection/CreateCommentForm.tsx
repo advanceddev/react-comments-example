@@ -21,12 +21,14 @@ const FieldSet = styled.div`
 
 const InputField = styled.input`
   border: none;
-  background: #eee5;
   padding: 1em;
   border-radius: 1em;
   font-size: 1em;
   font-weight: 500;
   outline: none;
+  @media (prefers-color-scheme: light) {
+    background: #eee5;
+  }
 `
 
 const Textarea = styled.textarea`
@@ -37,7 +39,6 @@ const Textarea = styled.textarea`
   max-width: 100%;
   height: 180px;
   border: none;
-  background: #eee5;
   padding: 1em;
   border-radius: 1em;
   resize: none;
@@ -46,6 +47,9 @@ const Textarea = styled.textarea`
   appearance: textfield;
   outline: none;
   box-sizing: border-box;
+  @media (prefers-color-scheme: light) {
+    background: #eee5;
+  }
 `
 
 const INITIAL_STATE = { name: '', email: '', body: '' }

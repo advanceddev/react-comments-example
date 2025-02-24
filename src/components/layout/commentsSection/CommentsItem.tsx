@@ -33,10 +33,12 @@ const CommentWrapper = styled.div`
 const CommentBody = styled.span`
   font-size: 1em;
   font-weight: 500;
-  color: #333;
   white-space: break-spaces;
   overflow: hidden;
   text-overflow: ellipsis;
+  @media (prefers-color-scheme: light) {
+    color: #333;
+  }
 `
 
 const CommentFooter = styled.div<{ $folded?: boolean }>`
@@ -49,11 +51,12 @@ const UnfoldButton = styled.button`
   background: transparent;
   padding: 0;
   outline: none;
-  border-bottom: 2px dashed #ccc;
+  border-bottom: 2px dashed #777;
   line-height: 1.5;
   height: max-content;
   border-radius: 0;
   color: #777;
+  font-size: 12px;
 `
 
 function CommentsItem({ data }: Props) {
