@@ -8,11 +8,12 @@ type Props = {
   data: Comment
 }
 
-const Wrapper = styled.div`
+const Wrapper = styled.div<{ folded?: boolean }>`
   position: relative;
   display: grid;
   grid-template-columns: 56px 1fr;
   gap: .5em;
+  opacity: ${p => p.folded ? '.5' : '1'};
 `
 
 const Userpic = styled.img`
@@ -88,7 +89,7 @@ function CommentsItem({ data }: Props) {
   }
 
   return (
-    <Wrapper>
+    <Wrapper folded={state.rating < -10}>
       <Userpic src={data.userpic} alt={data.author} width={48} height={48} />
       <CommentWrapper>
         <CommentHeaderInfo author={data.author} date={data.created_at} />

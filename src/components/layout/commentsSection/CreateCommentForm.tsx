@@ -77,7 +77,7 @@ function CreateCommentForm({ onSubmit }:Props) {
       postId: 1,
       author: state.name.trim(),
       email: state.email.trim(),
-      userpic: 'https://avatar.iran.liara.run/public',
+      userpic: 'https://dummyjson.com/icon/65535/150',
       body: state.body.trim(),
       rating: 0
     }
