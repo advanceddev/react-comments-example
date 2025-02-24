@@ -4,7 +4,7 @@ import path from 'path';
 
 // https://vite.dev/config/
 export default defineConfig({
-  base: 'react-comments-example',
+  base: '/react-comments-example',
   plugins: [react()],
   resolve: {
     alias: {
