@@ -10,11 +10,9 @@ const CommentRatingSection = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
-  justify-content: flex-end;
+  justify-content: space-between;
   gap: 15px;
-  background: #eee2;
-  padding: 4px 18px;
-  border-radius: 24px;
+  min-width: 120px;
 `
 
 const CurrentRating = styled.span`
@@ -45,13 +43,13 @@ const DecrementButton = styled(Button)`
 export default function RatingControls({ rating, onIncrement, onDecrement }: Props){
   return (
     <CommentRatingSection>
-      <CurrentRating>{rating}</CurrentRating>
       <IncrementButton onClick={() => {
         onIncrement(1)
-      }}>+</IncrementButton>
+      }}>▲</IncrementButton>
+      <CurrentRating>{rating}</CurrentRating>
       <DecrementButton onClick={() => {
         onDecrement(-1)
-      }}>-</DecrementButton>
+      }}>▼</DecrementButton>
     </CommentRatingSection>
   );
 };

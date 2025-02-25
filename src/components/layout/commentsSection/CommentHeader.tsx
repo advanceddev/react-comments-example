@@ -8,10 +8,22 @@ type Props = {
   date: Date;
 }
 
-const CommentHeader= styled.div`
+const CommentHeader = styled.div`
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  align-items: center;
   gap: .25em;
+  @media screen and (max-width: 768px) {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+`
+
+const Interpunct = styled.span`
+  font-weight: 800;
+  @media screen and (max-width: 768px) {
+    display: none;
+  }
 `
 
 const AuthorName = styled.span`
@@ -39,6 +51,9 @@ export default function CommentHeaderInfo({ author, date }: Props) {
   return (
     <CommentHeader>
       <AuthorName>{author}</AuthorName>
+      <Interpunct>
+        {' · '}
+      </Interpunct>
       <CreatedDateTime>{formatedDate}</CreatedDateTime>
     </CommentHeader>
   )

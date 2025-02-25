@@ -13,6 +13,14 @@ const Wrapper = styled.div`
   display: grid;
   grid-template-columns: 56px 1fr;
   gap: 0.5em;
+  padding: 1em;
+  border-radius: 24px;
+  border: 1px solid transparent;
+  @media screen and (min-width: 768px) {
+    &:hover {
+      border-color: #aaa5;
+    }
+  }
 `
 
 const Userpic = styled.img`
@@ -36,7 +44,7 @@ const CommentBody = styled.span<{ $folded?: boolean }>`
   white-space: break-spaces;
   overflow: hidden;
   text-overflow: ellipsis;
-  opacity: ${p => p.$folded ? 0.5 : 1};
+  opacity: ${p => p.$folded ? 0.65 : 1};
   @media (prefers-color-scheme: light) {
     color: #333;
   }
@@ -84,7 +92,7 @@ function CommentsItem({ data }: Props) {
   }, [])
 
   const buttonText = useMemo(() => {
-    return fullView ? 'Скрыть комментарий' : 'Развернуть комментарий'
+    return fullView ? 'Скрыть комментарий' : 'Показать комментарий'
   }, [fullView])
 
   return (
