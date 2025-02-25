@@ -24,14 +24,14 @@ const Userpic = styled.div`
   width: 48px;
   height: 48px;
   border-radius: 64px;
-  background: #ccce;
+  background: #ccc5;
 `
 
 const Body = styled.div`
   width: 100%;
   height: 240px;
   border-radius: 1em;
-  background: #ccce;
+  background: #ccc5;
 `
 
 export default function CommentSkeleton() {

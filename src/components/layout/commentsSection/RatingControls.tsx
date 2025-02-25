@@ -2,8 +2,8 @@ import styled from "styled-components";
 
 type Props = {
   rating: number;
-  onIncrement: () => void;
-  onDecrement: () => void;
+  onIncrement: (change: number) => void;
+  onDecrement: (change: number) => void;
 }
 
 const CommentRatingSection = styled.div`
@@ -46,8 +46,12 @@ export default function RatingControls({ rating, onIncrement, onDecrement }: Pro
   return (
     <CommentRatingSection>
       <CurrentRating>{rating}</CurrentRating>
-      <IncrementButton onClick={onIncrement}>+</IncrementButton>
-      <DecrementButton onClick={onDecrement}>-</DecrementButton>
+      <IncrementButton onClick={() => {
+        onIncrement(1)
+      }}>+</IncrementButton>
+      <DecrementButton onClick={() => {
+        onDecrement(-1)
+      }}>-</DecrementButton>
     </CommentRatingSection>
   );
 };

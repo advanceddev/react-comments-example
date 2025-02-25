@@ -1,5 +1,5 @@
 import type { Comment } from "@/types"
-import { memo, useEffect, useState } from "react"
+import { memo, useEffect, useState, useMemo, useCallback } from "react"
 import styled from "styled-components"
 import RatingControls from "./RatingControls"
 import CommentHeaderInfo from "./CommentHeader"
@@ -8,12 +8,11 @@ type Props = {
   data: Comment
 }
 
-const Wrapper = styled.div<{ $folded?: boolean }>`
+const Wrapper = styled.div`
   position: relative;
   display: grid;
   grid-template-columns: 56px 1fr;
-  gap: .5em;
-  opacity: ${p => p.$folded ? '.5' : '1'};
+  gap: 0.5em;
 `
 
 const Userpic = styled.img`
@@ -26,17 +25,18 @@ const Userpic = styled.img`
 const CommentWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  gap: .75em;
+  gap: 0.75em;
   justify-content: center;
   overflow: hidden;
 `
 
-const CommentBody = styled.span`
+const CommentBody = styled.span<{ $folded?: boolean }>`
   font-size: 1em;
   font-weight: 500;
   white-space: break-spaces;
   overflow: hidden;
   text-overflow: ellipsis;
+  opacity: ${p => p.$folded ? 0.5 : 1};
   @media (prefers-color-scheme: light) {
     color: #333;
   }
@@ -60,65 +60,60 @@ const UnfoldButton = styled.button`
   font-size: 12px;
 `
 
-function CommentsItem({ data }: Props) {
-
-  const [state, setState] = useState({
-    rating: data.rating,
-    folded: data.rating < -10,
-    fullView: data.rating >= -10
-  });
+const CommentsItem = memo(({ data }: Props) => {
+  const [rating, setRating] = useState(data.rating)
+  const [fullView, setFullView] = useState(rating >= -10)
+  const [folded, setFolded] = useState(rating < -10)
 
   useEffect(() => {
-  if (state.rating < -10) {
-    setState(prev => ({ ...prev, folded: true }));
-  } else {
-    setState(prev => ({ ...prev, folded: false, fullView: true }));
-  }
-}, [state.rating]);
+    if (rating < -10) {
+      setFolded(true)
+      setFullView(false)
+    } else {
+      setFolded(false)
+      setFullView(true)
+    }
+  }, [rating])
 
-  const updateRating = (change: number) => {
-    setState(prev => ({ ...prev, rating: prev.rating + change }));
-  };
+  const updateRating = useCallback((change: number) => {
+    setRating(prevRating => prevRating + change)
+  }, [])
 
-  const handleIncrementRating = () => {
-    updateRating(1)
-  }
+  const toggleFullView = useCallback(() => {
+    setFullView(prevFullView => !prevFullView)
+  }, [])
 
-  const handleDecrementRating = () => {
-    updateRating(-1)
-  }
+  const buttonText = useMemo(() => {
+    return fullView ? 'Скрыть комментарий' : 'Развернуть комментарий'
+  }, [fullView])
 
   return (
-    <Wrapper $folded={state.rating < -10}>
+    <Wrapper>
       <Userpic src={data.userpic} alt={data.author} width={48} height={48} />
       <CommentWrapper>
         <CommentHeaderInfo author={data.author} date={data.created_at} />
-        
-        {state.fullView && (
-          <CommentBody>
+
+        {fullView && (
+          <CommentBody $folded={folded}>
             {data.body}
           </CommentBody>
         )}
-        
-        <CommentFooter $folded={state.folded}>
-          {state.folded && (
-            <UnfoldButton onClick={() => {
-              setState(prev => ({ ...prev, fullView: !prev.fullView }))
-            }}>
-              {state.fullView ? 'Скрыть комментарий' : 'Развернуть комментарий'}
+
+        <CommentFooter $folded={folded}>
+          {folded && (
+            <UnfoldButton onClick={toggleFullView}>
+              {buttonText}
             </UnfoldButton>
           )}
-
-          <RatingControls 
-            rating={state.rating} 
-            onIncrement={handleIncrementRating} 
-            onDecrement={handleDecrementRating} 
+          <RatingControls
+            rating={rating}
+            onIncrement={updateRating}
+            onDecrement={updateRating}
           />
-
         </CommentFooter>
       </CommentWrapper>
     </Wrapper>
-  );
-}
+  )
+})
 
-export default memo(CommentsItem)
+export default CommentsItem

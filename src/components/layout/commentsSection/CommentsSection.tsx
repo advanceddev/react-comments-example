@@ -44,7 +44,13 @@ export default function CommentsSection() {
         Комментарии
       </SectionTitle>
       <CreateCommentForm onSubmit={handleLeaveComment}/>
-      <Suspense fallback={<CommentSkeleton />}>
+      <Suspense fallback={
+        <>
+          <CommentSkeleton />
+          <CommentSkeleton />
+          <CommentSkeleton />
+        </>
+      }>
         {items}
       </Suspense>
     </Wrapper>
