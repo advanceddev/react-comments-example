@@ -60,7 +60,7 @@ const UnfoldButton = styled.button`
   font-size: 12px;
 `
 
-const CommentsItem = memo(({ data }: Props) => {
+function CommentsItem({ data }: Props) {
   const [rating, setRating] = useState(data.rating)
   const [fullView, setFullView] = useState(rating >= -10)
   const [folded, setFolded] = useState(rating < -10)
@@ -114,6 +114,6 @@ const CommentsItem = memo(({ data }: Props) => {
       </CommentWrapper>
     </Wrapper>
   )
-})
+}
 
-export default CommentsItem
+export default memo(CommentsItem)
