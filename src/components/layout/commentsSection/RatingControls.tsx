@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import SlIconButton from '@shoelace-style/shoelace/dist/react/icon-button/index.js';
 
 type Props = {
   rating: number;
@@ -20,36 +21,16 @@ const CurrentRating = styled.span`
   font-size: 1em;
 `
 
-const Button = styled.button`
-  font-weight: 800;
-  font-size: 1.5em;
-  padding: .25em;
-  background: transparent;
-  border: none;
-  outline: none;
-  &:hover {
-    opacity: 0.5;
-  }
-`
-
-const IncrementButton = styled(Button)`
-  color: green;
-`
-
-const DecrementButton = styled(Button)`
-  color: red;
-`
-
 export default function RatingControls({ rating, onIncrement, onDecrement }: Props){
   return (
     <CommentRatingSection>
-      <IncrementButton onClick={() => {
+      <SlIconButton style={{ color: 'green' }} name="caret-up-fill" label="Лайк" onClick={() => {
         onIncrement(1)
-      }}>▲</IncrementButton>
+      }}/>
       <CurrentRating>{rating}</CurrentRating>
-      <DecrementButton onClick={() => {
+      <SlIconButton style={{ color: 'red' }} name="caret-down-fill" label="Дизлайк" onClick={() => {
         onDecrement(-1)
-      }}>▼</DecrementButton>
+      }}/>
     </CommentRatingSection>
   );
 };

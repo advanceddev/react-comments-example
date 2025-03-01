@@ -11,7 +11,7 @@ const CommentsItem = lazy(() => import('./CommentsItem'))
 const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 3rem;
+  gap: 2rem;
   width: 100%;
   box-sizing: border-box;
 `

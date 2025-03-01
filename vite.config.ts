@@ -17,4 +17,14 @@ export default defineConfig({
       '@': path.resolve(__dirname, './src'),
     },
   },
+  build: {
+    emptyOutDir: true,
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          shoelace: ['@shoelace-style/shoelace']
+        }
+      }
+    }
+  }
 })

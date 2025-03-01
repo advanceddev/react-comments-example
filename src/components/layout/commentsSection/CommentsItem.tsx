@@ -1,6 +1,7 @@
 import type { Comment } from "@/types"
 import { memo, useEffect, useState, useMemo, useCallback } from "react"
 import styled from "styled-components"
+import SlCard from '@shoelace-style/shoelace/dist/react/card/index.js';
 import RatingControls from "./RatingControls"
 import CommentHeaderInfo from "./CommentHeader"
 
@@ -13,13 +14,6 @@ const Wrapper = styled.div`
   display: grid;
   grid-template-columns: 56px 1fr;
   gap: 0.5em;
-  padding: 1em;
-  border-radius: 24px;
-  border: 1px solid transparent;
-  @media screen and (min-width: 768px) {
-    &:hover {
-      border-color: #aaa5;
-    }
   }
 `
 
@@ -45,9 +39,6 @@ const CommentBody = styled.span<{ $folded?: boolean }>`
   overflow: hidden;
   text-overflow: ellipsis;
   opacity: ${p => p.$folded ? 0.65 : 1};
-  @media (prefers-color-scheme: light) {
-    color: #333;
-  }
 `
 
 const CommentFooter = styled.div<{ $folded?: boolean }>`
@@ -96,31 +87,33 @@ function CommentsItem({ data }: Props) {
   }, [fullView])
 
   return (
-    <Wrapper>
-      <Userpic src={data.userpic} alt={data.author} width={48} height={48} />
-      <CommentWrapper>
-        <CommentHeaderInfo author={data.author} date={data.created_at} />
+    <SlCard>
+      <Wrapper>
+        <Userpic src={data.userpic} alt={data.author} width={48} height={48} />
+        <CommentWrapper>
+          <CommentHeaderInfo author={data.author} date={data.created_at} />
 
-        {fullView && (
-          <CommentBody $folded={folded}>
-            {data.body}
-          </CommentBody>
-        )}
-
-        <CommentFooter $folded={folded}>
-          {folded && (
-            <UnfoldButton onClick={toggleFullView}>
-              {buttonText}
-            </UnfoldButton>
+          {fullView && (
+            <CommentBody $folded={folded}>
+              {data.body}
+            </CommentBody>
           )}
-          <RatingControls
-            rating={rating}
-            onIncrement={updateRating}
-            onDecrement={updateRating}
-          />
-        </CommentFooter>
-      </CommentWrapper>
-    </Wrapper>
+
+          <CommentFooter $folded={folded}>
+            {folded && (
+              <UnfoldButton onClick={toggleFullView}>
+                {buttonText}
+              </UnfoldButton>
+            )}
+            <RatingControls
+              rating={rating}
+              onIncrement={updateRating}
+              onDecrement={updateRating}
+            />
+          </CommentFooter>
+        </CommentWrapper>
+      </Wrapper>
+    </SlCard>
   )
 }
 

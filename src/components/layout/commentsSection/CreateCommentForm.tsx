@@ -1,6 +1,13 @@
 import type { Comment } from '@/types'
-import type { ChangeEvent, FormEvent } from 'react'
-import { memo, useCallback, useRef, useState } from "react"
+
+import SlButton from '@shoelace-style/shoelace/dist/react/button/index.js';
+import SlTextarea, { type SlChangeEvent } from '@shoelace-style/shoelace/dist/react/textarea/index.js';
+
+import SlInput from '@shoelace-style/shoelace/dist/react/input/index.js';
+import type SlInputElement from '@shoelace-style/shoelace/dist/components/input/input.d.ts';
+
+import type { FormEvent } from 'react'
+import { memo, useCallback, useState } from "react"
 import styled from "styled-components"
 
 type Props = {
@@ -19,44 +26,10 @@ const FieldSet = styled.div`
   gap: 1em;
 `
 
-const InputField = styled.input`
-  border: none;
-  padding: 1em;
-  border-radius: 1em;
-  font-size: 1em;
-  font-weight: 500;
-  outline: none;
-  @media (prefers-color-scheme: light) {
-    background: #eee5;
-  }
-`
-
-const Textarea = styled.textarea`
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-  font-size: 1em;
-  font-weight: 500;
-  width: 100%;
-  max-width: 100%;
-  height: 180px;
-  border: none;
-  padding: 1em;
-  border-radius: 1em;
-  resize: none;
-  -webkit-appearance: textfield;
-  -moz-appearance: textfield;
-  appearance: textfield;
-  outline: none;
-  box-sizing: border-box;
-  @media (prefers-color-scheme: light) {
-    background: #eee5;
-  }
-`
-
 const INITIAL_STATE = { name: '', email: '', body: '' }
 
 function CreateCommentForm({ onSubmit }:Props) {
 
-  const textAreaRef = useRef<HTMLTextAreaElement>(null)
   const [isPending, setIsPending] = useState(false)
 
   const [state, setState] = useState(INITIAL_STATE)
@@ -69,7 +42,6 @@ function CreateCommentForm({ onSubmit }:Props) {
     e?.preventDefault()
     if (isPending) return
     setIsPending(true)
-    textAreaRef.current?.blur()
 
     const payload = {
       id: Math.random(),
@@ -89,24 +61,24 @@ function CreateCommentForm({ onSubmit }:Props) {
     })
   }, [state.body, state.name, state.email, isPending, onSubmit, resetForm])
 
-  const handleFieldChange = (e: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
-    setState({ ...state, [e.target.name]: e.target.value })
-  }
+  const handleFieldChange = useCallback((e: SlChangeEvent) => {
+    setState({ ...state, [(e.target as SlInputElement).name]: (e.target as SlInputElement).value })
+  }, [state])
 
   return (
     <Wrapper action="" method="" onSubmit={handleSubmit}>
       <FieldSet>
-        <InputField
+        <SlInput
           value={state.name}
-          onChange={handleFieldChange}
+          onSlChange={handleFieldChange}
           type="text"
           name="name"
           placeholder='Введите имя'
           required
         />
-        <InputField
+        <SlInput
           value={state.email}
-          onChange={handleFieldChange}
+          onSlChange={handleFieldChange}
           type="email"
           name="email"
           placeholder='Введите E-mail'
@@ -114,18 +86,24 @@ function CreateCommentForm({ onSubmit }:Props) {
         />
       </FieldSet>
 
-      <Textarea
-        ref={textAreaRef}
-        placeholder="Оставьте комментарий..."
-        onChange={handleFieldChange}
+      <SlTextarea
+        resize="none"
+        placeholder='Оставьте комментарий...'
         value={state.body}
-        name="body"
+        onSlChange={handleFieldChange}
+        name='body'
         required
       />
 
-      <button type='submit' disabled={isPending}>
-        {isPending ? '...' : 'Оставить комментарий'}
-      </button>
+      <SlButton
+        type='submit'
+        variant='primary'
+        disabled={isPending}
+        loading={isPending}
+        size='large'
+      >
+        Оставить комментарий
+      </SlButton>
     </Wrapper>
   )
 }

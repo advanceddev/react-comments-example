@@ -29,9 +29,6 @@ const Interpunct = styled.span`
 const AuthorName = styled.span`
   font-size: 1em;
   font-weight: 700;
-  @media (prefers-color-scheme: light) {
-    color: #333;
-  }
 `
 
 const CreatedDateTime = styled.span`
